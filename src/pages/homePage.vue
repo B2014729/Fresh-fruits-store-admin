@@ -25,11 +25,11 @@
                         <div class="card-body">
                             <div class="media d-flex justify-content-between ">
                                 <div class="align-self-center">
-                                    <i class="fa-brands fa-rocketchat  fs-1 text-warning"></i>
+                                    <i class="fa-brands fa-first-order fs-1 text-warning"></i>
                                 </div>
                                 <div class="media-body float-right">
                                     <h3>156</h3>
-                                    <span>Bình luận mới</span>
+                                    <span>Đơn hàng</span>
                                 </div>
                             </div>
                         </div>

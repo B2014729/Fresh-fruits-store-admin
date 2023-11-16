@@ -1,14 +1,14 @@
 <template>
     <div class="p-3">
-        <h4 class="text-secondary fw-bold">Danh sách sản phẩm__:</h4>
+        <h4 class="text-secondary fw-bold">Danh sách khách hàng__:</h4>
         <search-component @submit="search($event)">
 
         </search-component>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Mã KH</th>
-                    <th scope="col">Tên KH</th>
+                    <th scope="col" style="width: 150px;">Mã KH</th>
+                    <th scope="col">Tên khách hàng</th>
                     <th scope="col" class="text-center">Số điện thoại</th>
                     <th scope="col" class="text-center">Số đơn hàng</th>
                     <th scope="col">Địa chỉ</th>
@@ -16,61 +16,31 @@
 
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-for="(consumer, index) in listConsumer" :key="index">
+
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Nho mẫu đơn</td>
-                    <td class="text-center">0789567987</td>
+                    <th scope="row" class="_id">{{ consumer._id }}</th>
+
+                    <td>
+                        <router-link :to="{ name: 'product-list' }" style="text-decoration: none; color: black;">
+                            {{ consumer.fullname }}
+                        </router-link>
+                    </td>
+
+                    <td class="text-center">{{ consumer.phone }}</td>
                     <td class="text-center">3</td>
-                    <td>124/11A, đường 3/2, phường Xuân Khánh, quận Ninh Kiều, Tp.Cần Thơ.</td>
+                    <td>{{ consumer.address }}</td>
                     <td class="p-0 pe-1">
                         <div class="d-flex justify-content-end">
-                            <!-- <router-link :to="{ name: 'product-detail', params: { idproduct: '123456789' } }">
+                            <router-link :to="{ name: 'product-detail', params: { idproduct: '123456789' } }">
                                 <button class="btn btn-secondary"><i class="fa-solid fa-info"></i></button>
                             </router-link>
-                            <router-link :to="{ name: 'product-update', params: { idproduct: '123456789' } }">
-                                <button class="btn btn-primary mx-1"><i class="fa-solid fa-pen"></i></button>
-                            </router-link> -->
-                            <button class="btn btn-danger" @click="onDelete"> <i class="fa-solid fa-xmark"></i></button>
+                            <button class="btn btn-danger ms-1" @click="onDelete(consumer._id)"> <i
+                                    class="fa-solid fa-xmark"></i></button>
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Nho mẫu đơn</td>
-                    <td class="text-center">0789567987</td>
-                    <td class="text-center">3</td>
-                    <td>124/11A, đường 3/2, phường Xuân Khánh, quận Ninh Kiều, Tp.Cần Thơ.</td>
-                    <td class="p-0 pe-1">
-                        <div class="d-flex justify-content-end">
-                            <!-- <router-link :to="{ name: 'product-detail', params: { idproduct: '123456789' } }">
-                                <button class="btn btn-secondary"><i class="fa-solid fa-info"></i></button>
-                            </router-link>
-                            <router-link :to="{ name: 'product-update', params: { idproduct: '123456789' } }">
-                                <button class="btn btn-primary mx-1"><i class="fa-solid fa-pen"></i></button>
-                            </router-link> -->
-                            <button class="btn btn-danger" @click="onDelete"> <i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Nho mẫu đơn</td>
-                    <td class="text-center">0789567987</td>
-                    <td class="text-center">3</td>
-                    <td>124/11A, đường 3/2, phường Xuân Khánh, quận Ninh Kiều, Tp.Cần Thơ.</td>
-                    <td class="p-0 pe-1">
-                        <div class="d-flex justify-content-end">
-                            <!-- <router-link :to="{ name: 'product-detail', params: { idproduct: '123456789' } }">
-                                <button class="btn btn-secondary"><i class="fa-solid fa-info"></i></button>
-                            </router-link>
-                            <router-link :to="{ name: 'product-update', params: { idproduct: '123456789' } }">
-                                <button class="btn btn-primary mx-1"><i class="fa-solid fa-pen"></i></button>
-                            </router-link> -->
-                            <button class="btn btn-danger" @click="onDelete"> <i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </td>
-                </tr>
+
             </tbody>
         </table>
     </div>
@@ -78,6 +48,7 @@
 
 <script>
 import SearchComponent from '@/components/searchComponent.vue';
+import consumerService from '@/services/consumer.service';
 
 export default {
     name: 'ConsumerList',
@@ -85,16 +56,52 @@ export default {
         SearchComponent
     },
 
-
+    data() {
+        return {
+            listConsumer: [],
+        }
+    },
     methods: {
         search(data) {
             console.log(data);
         },
 
-        onDelete() {
-            alert('Bạn chắc chắn muốn xóa khách hàng?');
+        async onDelete(idConsumer) {
+            if (confirm('Bạn chắc chắn muốn xóa khách hàng?')) {
+                try {
+                    let statusDelete = false;
+                    await consumerService.deleteConsumer(idConsumer).then((result) => {
+                        if (result.statusCode == 200) {
+                            statusDelete = true;
+                            alert('Đã xóa khách hàng khỏi hệ thống!');
+                        }
+                    });
+
+                    if (statusDelete) {
+                        await consumerService.getListConsumer().then((result) => {
+                            this.listConsumer = result.data;
+                        })
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
         }
+    },
+
+    async created() {
+        await consumerService.getListConsumer().then((result) => {
+            this.listConsumer = result.data;
+        })
     }
 }
 </script>
-<style scoped></style>
+<style scoped>
+._id {
+    width: 150px;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>

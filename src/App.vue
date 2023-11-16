@@ -42,7 +42,11 @@ export default {
   },
 
   created() {
-    this.authToken = false;
+    if (!this.$cookies.get('jwt')) {
+      this.authToken = false;
+    } else {
+      this.authToken = true;
+    }
   }
 }
 </script>
@@ -53,5 +57,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.router-link-active,
+.router-link-exact-active>li {
+  background-color: #0000001c;
 }
 </style>

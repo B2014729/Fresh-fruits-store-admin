@@ -9,34 +9,46 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center form_container">
-                    <form>
-                        <div class="input-group mb-3">
+                    <form @submit.prevent="submit">
+                        <div class="input-group">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" name="" class="form-control input_user" value="" placeholder="username">
+                            <input type="email" v-model="data.email" class="form-control input_user" placeholder="E-mail">
                         </div>
-                        <div class="input-group mb-2">
+                        <span v-if="error.emailEmpty" class="text-danger" style="font-size: 13px;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Email không để trống!
+                        </span>
+
+                        <div class="input-group mt-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
-                            <input type="password" name="" class="form-control input_pass" value="" placeholder="password">
+                            <input type="password" v-model="data.password" class="form-control input_pass"
+                                placeholder="Password">
                         </div>
+                        <span v-if="error.passwordEmpty" class="text-danger" style="font-size: 13px;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Mật khẩu không để trống!
+                        </span>
+
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="customControlInline">
-                                <label class="custom-control-label text-white ms-2" for="customControlInline">Remember
-                                    me</label>
+                                <label class="custom-control-label text-white ms-2" style="font-size:13px"
+                                    for="customControlInline">
+                                    Remember me</label>
                             </div>
                         </div>
+                        <span v-if="error.loginFail" class="text-danger" style="font-size: 13px;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Email hoặc mật khẩu không đúng!
+                        </span>
                         <div class="d-flex justify-content-center mt-3 login_container">
-                            <button type="button" name="button" class="btn login_btn">Login</button>
+                            <button type="submit" class="btn login_btn">Login</button>
                         </div>
                     </form>
                 </div>
 
                 <div class="mt-4">
-
                     <div class="d-flex justify-content-center links">
                         <a href="#">Forgot your password?</a>
                     </div>
@@ -46,6 +58,48 @@
     </div>
 </template>
 <script>
+import authService from '@/services/auth.service';
+export default {
+    name: 'LoginPage',
+    data() {
+        return {
+            data: {},
+            error: {},
+        };
+    },
+
+    methods: {
+        async submit() {
+            if (!this.data.email) {
+                this.error.emailEmpty = true;
+            } else {
+                this.error.emailEmpty = false;
+            }
+
+            if (!this.data.password) {
+                this.error.passwordEmpty = true;
+            } else {
+                this.error.passwordEmpty = false;
+            }
+
+            if (!this.error.emailEmpty && !this.error.password) {
+                try {
+                    this.error.loginFail = false;
+                    await authService.login(this.data.email, this.data.password).then((result) => {
+                        if (result.data.statusCode == 201) {
+                            this.$cookies.set('jwt', result.headers.user_token);
+                            window.location.href = '/';
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                    this.error.loginFail = true;
+                }
+            }
+        }
+    }
+
+}
 </script>
 <style scoped>
 .user_card {
