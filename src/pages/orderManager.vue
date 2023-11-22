@@ -44,7 +44,7 @@
 <script>
 import orderService from '@/services/order.service';
 import consumerService from '@/services/consumer.service';
-
+import moment from 'moment';
 import searchComponent from '@/components/searchComponent.vue';
 
 export default {
@@ -110,6 +110,7 @@ export default {
                 await consumerService.getInfo(this.listOrder[i].idConsumer).then((result) => {
                     this.listOrder[i].nameConsumer = result.data.fullname;
                     this.listOrder[i].phone = result.data.phone;
+                    this.listOrder[i].orderDate = moment(this.listOrder[i].orderDate).format("DD/MM/YYYY");
                 })
             }
         } catch (error) {

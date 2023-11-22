@@ -32,7 +32,7 @@
                     <td>{{ consumer.address }}</td>
                     <td class="p-0 pe-1">
                         <div class="d-flex justify-content-end">
-                            <router-link :to="{ name: 'product-detail', params: { idproduct: '123456789' } }">
+                            <router-link :to="{ name: 'consumer-list' }">
                                 <button class="btn btn-secondary"><i class="fa-solid fa-info"></i></button>
                             </router-link>
                             <button class="btn btn-danger ms-1" @click="onDelete(consumer._id)"> <i

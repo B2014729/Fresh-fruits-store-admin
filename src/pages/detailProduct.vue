@@ -10,12 +10,14 @@
                     <div>
                         <h4 class="fw-bold text-success">{{ product.name }}</h4>
                         <ul>
-                            <li><span class="fw-bold">Hạn sử dụng: </span>{{ product.hsd }}</li>
+                            <li><span class="fw-bold">Nguồn gốc: </span>{{ product.origin }} </li>
+                            <li><span class="fw-bold">Hạn sử dụng: </span>{{ product.hsd }} tháng</li>
                             <li><span class="fw-bold">Bảo quản: </span>{{ product.preserve }}</li>
                             <li><span class="fw-bold">Quy cách: </span>{{ product.specifications }}kg/1 gói</li>
                             <li><span class="fw-bold">Mô tả: </span>{{ product.description }}</li>
+                            <li><span class="fw-bold">Số lượng trong kho: </span>{{ product.quantity }} kg</li>
                         </ul>
-                        <router-link :to="{ name: 'product-update', params: { idproduct: '123456789' } }">
+                        <router-link :to="{ name: 'product-update', params: { idproduct: product._id } }">
                             <button class="btn btn-secondary float-end m-3"> Cập nhật</button>
                         </router-link>
 

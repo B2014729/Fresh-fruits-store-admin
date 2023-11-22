@@ -29,6 +29,8 @@
                         Quay lại
                     </button>
                 </router-link>
+                <button class="btn btn-success float-end" @click="approve">Duyệt đơn hàng</button>
+
             </div>
         </div>
     </div>
@@ -37,8 +39,6 @@
 import consumerService from '@/services/consumer.service';
 import orderService from '@/services/order.service';
 export default {
-    watch: {
-    },
     name: 'DetailOrder',
 
     setup() {
@@ -62,7 +62,16 @@ export default {
             order: {},
         };
     },
-
+    methods: {
+        async approve() {
+            await orderService.approveOrder(this.idOrder).then((result) => {
+                if (result.statusCode == 200) {
+                    this.order.status = 'Đơn hàng đang được chuẩn bị.'
+                    alert('Đã duyệt đơn hàng!');
+                }
+            })
+        }
+    },
     async created() {
         try {
             await orderService.getOrder(this.idOrder).then((result) => {

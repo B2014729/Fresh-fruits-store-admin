@@ -20,6 +20,18 @@ class ProductService {
     async getProductWithType(type) {
         return (await this.api.get(`/product-type/${type}`,)).data;
     }
+
+    async createProduct(data) {
+        return (await this.api.post('/product-create', { data })).data;
+    }
+
+    async deleteProduct(idproduct) {
+        return (await this.api.delete(`/product/${idproduct}`)).data;
+    }
+
+    async updateProduct(data, idproduct) {
+        return (await this.api.put(`/product/${idproduct}`, { data })).data;
+    }
 }
 
 export default new ProductService();

@@ -27,9 +27,10 @@ export default {
         }
     },
 
+    emits: ['onDelete'],
     methods: {
         onDelete() {
-            console.log(this.product);
+            this.$emit('onDelete', this.product._id);
         }
     }
 }

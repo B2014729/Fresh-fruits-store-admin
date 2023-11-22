@@ -24,6 +24,10 @@ class OrderService {
     async deleteOrder(idOrder) {
         return (await this.api.delete(`/order/${idOrder}`)).data;
     }
+
+    async approveOrder(idOrder) {
+        return (await this.api.put(`/order/${idOrder}`)).data;
+    }
 }
 
 export default new OrderService();
